@@ -3,28 +3,18 @@ import axios from 'axios'
 import { TextField, Button, CircularProgress } from '@material-ui/core';
 import { useHistory, useParams } from 'react-router-dom'
 
-const MovieUpdate = ({setMovieList, movieList}) => {
+const MovieAdd = ({setMovieList, movieList}) => {
     const initialMovie = {
             id: '',
             title: '',
             director: '',
             metascore: '',
-            stars: [],
+            stars: '',
     }
     const [movie, setMovie] = useState(initialMovie)
     const [isLoading, setIsLoading] = useState(false)
     let history = useHistory()
     const {id} = useParams()
-
-    useEffect(()=> {
-        axios.get(`http://localhost:5000/api/movies/${id}`)
-            .then(res => {
-                setMovie(res.data)
-                setMovie({...res.data, [res.data.stars]: res.stars.join(',')})
-            })
-            .catch(err => console.log(err))
-    }, [id])
-    console.log(movie)
 
     const inputHandler = (e) => {
         setMovie({...movie, [e.target.name]: e.target.value})
@@ -44,13 +34,7 @@ const MovieUpdate = ({setMovieList, movieList}) => {
         axios
             .put(`http://localhost:5000/api/movies/${id}`, movieSetter)
             .then(response => {
-                setMovieList(movieList.map(mv => {
-                    if (mv.id == id) {
-                        return response.data
-                    } else {
-                        return mv
-                    }
-                }))
+                setMovieList([...movieList, response.data])
                 setIsLoading(false)
                 history.push('/')
             })
@@ -96,11 +80,11 @@ const MovieUpdate = ({setMovieList, movieList}) => {
                 />
                 {isLoading ? <CircularProgress /> : ''}
                 <Button type='submit' >
-                    Update
+                    Add Movie
                 </Button>
             </form>
         </>
     )
 }
 
-export default MovieUpdate
+export default MovieAdd

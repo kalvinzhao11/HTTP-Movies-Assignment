@@ -23,6 +23,7 @@ const MovieCard = props => {
     e.preventDefault()
     history.push(`/update-movie/${id}`)
   }
+  console.log(stars)
   return (
     <div className="movie-card">
       <h2>{title}</h2>
